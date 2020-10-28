@@ -8,14 +8,15 @@ enum Direction { Left, Right, Up, Down };
 
 constexpr auto BLACK = '@';
 constexpr auto WHITE = '.';
-constexpr auto X = 15;
+constexpr auto X = 30;
 constexpr auto Y = 15;
-constexpr auto X1000 = 15000;
-constexpr auto Y1000 = 15000;
+constexpr auto X1000 = X * 1000;
+constexpr auto Y1000 = Y * 1000;
 constexpr auto PAUSE = 300;
 constexpr auto CANDY = '$';
 constexpr clock_t CANDY_DURATION = 6500;
-constexpr clock_t CANDY_APPEAR = 7000;
+constexpr clock_t CANDY_APPEAR = 10000;
+
 class Node {
 public:
 	int x;
@@ -36,7 +37,7 @@ private:
 	Node* head;
 	Node* tail;
 	int length;
-	char table[X][Y];
+	char table[Y][X];
 	int candy_x, candy_y;
 public:
 	Snake(Node* head, Node* tail);
@@ -105,7 +106,7 @@ int main() {
 		snake.print();
 	}
 
-
+	system("pause");
 	return 0;
 }
 
@@ -118,8 +119,8 @@ Snake::Snake(Node* head, Node* tail) {
 	candy_x = 32767;
 	candy_y = 32767;
 	length = 2;
-	for (int i = 0; i < 15; ++i)
-		for (int j = 0; j < 15; ++j)
+	for (int i = 0; i < Y; ++i)
+		for (int j = 0; j < X; ++j)
 			table[i][j] = WHITE;
 	table[(*head).y][(*head).x] = BLACK;
 	table[(*tail).y][(*tail).x] = BLACK;
