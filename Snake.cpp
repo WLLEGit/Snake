@@ -16,6 +16,7 @@ constexpr auto PAUSE = 300;
 constexpr auto CANDY = '$';
 constexpr clock_t CANDY_DURATION = 6500;
 constexpr clock_t CANDY_APPEAR = 10000;
+constexpr auto GAME_MODE = 1;
 
 class Node {
 public:
@@ -73,6 +74,7 @@ int main() {
 	bool flag = true;
 	bool is_candy_exist = false;
 	start = clock();
+	bool is_eat = true;
 
 	while (flag) {
 		is_getch = false;
@@ -87,18 +89,37 @@ int main() {
 				is_getch = true;
 			}
 		}
-		if (snake.is_get_candy(dir)) {
-			snake.add_length();
-			snake.print();
+		if (GAME_MODE == 1) {
+			if (snake.is_get_candy(dir)) {
+				snake.add_length();
+				snake.print();
+			}
+			if ((clock() - start) % CANDY_APPEAR < 300) {
+				is_candy_exist = true;
+				snake.creat_candy();
+				candy_clock = clock();
+			}
+			if (is_candy_exist && clock() - candy_clock > CANDY_DURATION) {
+				snake.destory_candy();
+				is_candy_exist = false;
+			}
 		}
-		if ((clock() - start) % CANDY_APPEAR < 300) {
-			is_candy_exist = true;
-			snake.creat_candy();
-			candy_clock = clock();
-		}
-		if (is_candy_exist && clock() - candy_clock > CANDY_DURATION) {
-			snake.destory_candy();
-			is_candy_exist = false;
+		else if (GAME_MODE == 2) {
+			if (!is_candy_exist) {
+				snake.creat_candy();
+				is_candy_exist = true;
+				is_eat = false;
+			}
+			if (snake.is_get_candy(dir)) {
+				snake.add_length();
+				snake.print();
+				is_eat = true;
+			}
+			if (is_candy_exist && is_eat) {
+				snake.destory_candy();
+				is_candy_exist = false;
+			}
+
 		}
 
 		if (snake.run_once(dir) == -1)
